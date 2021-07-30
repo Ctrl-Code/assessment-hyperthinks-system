@@ -1,25 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import css from "./App.module.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+import Header from "./Header";
+import BasicData from "./BasicData";
+import APIs from "./APIs";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+  const [apiData, setApiData] = useState({});
+  const [apiOneData, setApiOneData] = useState({});
+
+  const callApiAndSetApiData = city => {
+    APIs.getWeatherAPI(city)
+      .then(res => {
+        const { lat, lon } = res?.coord ?? { lat: null, lon: null };
+
+        // set the normal api data;
+        setApiData(res);
+
+        APIs.getWeatherOneAPI(lat, lon)
+          .then(res => {
+            console.log('the response is', res);
+          })
+      });
+  }
+
+  return <div className={css.background}>
+    <Header getWeatherDetails={callApiAndSetApiData} />
+    <BasicData apiData={apiData} oneData={apiOneData} />
+  </div>
 }
 
 export default App;
