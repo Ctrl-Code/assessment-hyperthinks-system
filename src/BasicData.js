@@ -1,76 +1,81 @@
-import { Card, Container, Col, Row } from "react-bootstrap"
-import styled from "styled-components"
-import Chart from "./Chart";
-
-const StyledCol = styled(Col)`
-    width: 300px;
-`
+import Card from "react-bootstrap/Card";
+import Container from "react-bootstrap/Container";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
+import DaysChart from "./DaysChart";
+import HourlyChart from "./HourlyChart";
 
 const CardRows = (first, second = "-") => <Row>
     <Col>
-        {first}
+        <b>
+            {first}
+        </b>
     </Col>
     <Col>
         {second}
     </Col>
 </Row>
 
-export default function BasicData({ apiData = {}, oneData = {} }) {
+export default function BasicData(props) {
 
-    if (apiData?.name ?? null) {
-        localStorage.setItem("apiData", JSON.stringify(apiData));
-        console.log('set Data in localStorage');
-    }
+    const { apiData } = props;
 
-    const LocalStorageAPIData = JSON.parse(localStorage.getItem("apiData"));
+    const cityName = apiData?.name ?? null;
+    const coord = apiData?.coord ?? { lat: null, lon: null };
 
-    const cityName = LocalStorageAPIData?.name ?? null;
-    const coord = LocalStorageAPIData?.coord ?? { lat: null, lon: null };
-
-    const description = LocalStorageAPIData?.weather?.[0]?.description ?? null;
-    const feelsLike = LocalStorageAPIData?.main?.feels_like ?? null;
-    const humidity = LocalStorageAPIData?.main?.humidity ?? null;
-    const temperature = LocalStorageAPIData?.main?.temp ?? null;
-    const maxTemperature = LocalStorageAPIData?.main?.temp_max ?? null;
-    const minTemperature = LocalStorageAPIData?.main?.temp_min ?? null;
+    const description = apiData?.weather?.[0]?.description ?? null;
+    const feelsLike = apiData?.main?.feels_like ?? null;
+    const humidity = apiData?.main?.humidity ?? null;
+    const temperature = apiData?.main?.temp ?? null;
+    const maxTemperature = apiData?.main?.temp_max ?? null;
+    const minTemperature = apiData?.main?.temp_min ?? null;
 
     return <Container>
-        <Row sm={1} md={2}>
-            <StyledCol >
+        <Row>
+            <Col>
                 <Card style={{ backgroundColor: "rgb(188 223 243)" }}>
                     <Card.Body>
-                        <Card.Title>
-                            Current Weather
-                        </Card.Title>
 
                         {
-                            cityName &&
-                            <Card.Subtitle>
-                                {cityName}
-                            </Card.Subtitle>
+                            cityName ?
+
+                                <Card.Title style={{ fontSize: "28px", textDecoration: "underline" }}>
+                                    Current Weather of <span style={{ color: "#8a1292" }}>{cityName}</span>
+                                </Card.Title>
+
+                                :
+
+                                <Card.Title>
+                                    Current Weather
+                                </Card.Title>
                         }
 
                         {/* CARD DATA */}
                         <Card.Text>
                             <Container fluid>
-                                {CardRows("Lat.", coord.lat)}
-                                {CardRows("Lon.", coord.lon)}
-                                {CardRows("Desc.", description)}
+                                {CardRows("Latitude", coord.lat)}
+                                {CardRows("Longitude", coord.lon)}
+                                {CardRows("Description", description)}
                                 {CardRows("Feels", feelsLike)}
                                 {CardRows("Humidity", humidity)}
-                                {CardRows("Temp.", temperature)}
-                                {CardRows("Max Temp.", maxTemperature)}
-                                {CardRows("Min Temp.", minTemperature)}
+                                {CardRows("Temperature", temperature)}
+                                {CardRows("Max. Temperature", maxTemperature)}
+                                {CardRows("Min. Temperature", minTemperature)}
 
                             </Container>
                         </Card.Text>
 
                     </Card.Body>
                 </Card>
-            </StyledCol>
-
-            <Col>
-                <Chart oneData={oneData} />
+            </Col>
+        </Row>
+        <Row style={{ height: "60px" }} />
+        <Row className="justify-content-md-center" xs={1} sm={1} xl={2}>
+            <Col >
+                <HourlyChart oneData={props.oneData} />
+            </Col>
+            <Col >
+                <DaysChart oneData={props.oneData} />
             </Col>
         </Row>
     </Container>

@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Header from "./Header";
 import BasicData from "./BasicData";
+
 import APIs from "./APIs";
 
 function App() {
@@ -22,13 +23,19 @@ function App() {
         APIs.getWeatherOneAPI(lat, lon)
           .then(res => {
             console.log('the response is', res);
+            setApiOneData(res);
           })
       });
   }
 
   return <div className={css.background}>
+    <div style={{ height: "20px" }} />
     <Header getWeatherDetails={callApiAndSetApiData} />
-    <BasicData apiData={apiData} oneData={apiOneData} />
+    <div style={{ height: "50px" }} />
+    <BasicData
+      apiData={apiData}
+      oneData={apiOneData} />
+    <div style={{ height: "50px" }} />
   </div>
 }
 

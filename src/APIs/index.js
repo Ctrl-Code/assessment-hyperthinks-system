@@ -1,5 +1,5 @@
-const getWeatherAPI = require("./getWeatherAPI");
-const getWeatherOneAPI = require("./getWeatherOneAPI");
+import getWeatherAPI from "./getWeatherAPI";
+import getWeatherOneAPI from "./getWeatherOneAPI";
 
 export default {
     getWeatherAPI,

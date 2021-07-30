@@ -7,17 +7,26 @@ function SearchBar({ getWeatherDetails }) {
 
     const fetchWeather = () => getWeatherDetails(searchText);
 
+    const clearBox = () => setSearchText("");
+
     return <InputGroup className="mb-3">
+
+        <InputGroup.Text
+            onClick={clearBox}
+            style={{ cursor: "pointer" }}
+            id="basic-addon2">Clear</InputGroup.Text>
+
         <FormControl
             value={searchText}
             onChange={e => setSearchText(e.target.value)}
-            placeholder="Search City"
-            aria-label="Recipient's username"
+            placeholder="Enter city name"
             aria-describedby="basic-addon2"
         />
+
         <InputGroup.Text
             onClick={fetchWeather}
-            id="basic-addon2">Search City</InputGroup.Text>
+            style={{ cursor: "pointer" }}
+            id="basic-addon2">Search</InputGroup.Text>
     </InputGroup>
 }
 
